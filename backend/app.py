@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
 # from groq import Groq
@@ -7,8 +7,7 @@ from dotenv import load_dotenv
 # .env 파일에서 환경 변수 로드
 load_dotenv()
 
-app = Flask(__name__)
-# frontend/ 디렉토리를 정적 폴더로 설정
+app = Flask(__name__, static_folder='../frontend', static_url_path='')
 CORS(app)
 
 # Groq API 클라이언트 초기화 (실제 API 키 사용)
@@ -20,10 +19,7 @@ CORS(app)
 
 @app.route('/')
 def index():
-    # frontend/index.html을 서비스하기 위한 설정이지만,
-    # Vercel 배포 시에는 보통 정적 파일과 API가 분리되므로 Flask에서 직접 서빙하는 것은 주된 목적이 아님.
-    # 개발 편의를 위해 루트 경로 접속 시 간단한 메시지를 반환합니다.
-    return "Welcome to BizTone Converter Backend!"
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/api/convert', methods=['POST'])
 def convert_text():
@@ -41,8 +37,8 @@ def convert_text():
 
     # 1단계: 실제 Groq API 연동 대신 더미(dummy) 데이터 반환
     # Sprint 3에서 실제 변환 로직으로 교체될 예정입니다.
-    dummy_response = f"입력 텍스트: '{original_text}'
-    페르소나: '{persona}'에 맞춰 변환된 결과입니다. (이것은 더미 응답입니다.)"
+    dummy_response = f"""입력 텍스트: '{original_text}'
+    페르소나: '{persona}'에 맞춰 변환된 결과입니다. (이것은 더미 응답입니다.)"""
 
     return jsonify({
         "original_text": original_text,
@@ -53,4 +49,4 @@ def convert_text():
 if __name__ == '__main__':
     # Vercel 환경에서는 이 부분이 실행되지 않음.
     # 로컬 개발 시 `flask run` 또는 `python backend/app.py`로 서버를 실행.
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5000)

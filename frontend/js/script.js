@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {string} persona - 변환 대상 (upward, lateral, external)
      */
     async function callConversionAPI(text, persona) {
-        const API_URL = 'http://127.0.0.1:5001/api/convert'; // 로컬 Flask 서버 주소
+        const API_URL = 'http://127.0.0.1:5000/api/convert'; // 로컬 Flask 서버 주소
 
         // 로딩 상태 표시 (Sprint 2에서 구현)
         outputText.textContent = '변환 중...';
